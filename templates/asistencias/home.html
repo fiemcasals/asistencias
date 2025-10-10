@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+<h1>Diplomaturas</h1>
+<div class="grid">
+  {% for d in diplomaturas %}
+    <div class="card">
+      <h3>{{ d.nombre }}</h3>
+      <p>{{ d.descripcion }}</p>
+      <ul>
+        {% for m in d.materias.all %}
+          <li>{{ m.nombre }} {% if request.user.is_authenticated %}- 
+            <a href="{% url 'asistencias:listado_clases' m.id %}">ver clases</a>
+          {% endif %}</li>
+        {% empty %}
+          <li><em>Sin materias</em></li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% empty %}
+    <p>No hay diplomaturas cargadas.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Clases y asistencias{% endblock %}
+{% block content %}
+<h1>{{ materia.diplomatura.nombre }} · {{ materia.nombre }}</h1>
+<p>
+  <a class="btn" href="{% url 'asistencias:exportar_asistencias_pdf' materia.id %}">Exportar PDF</a>
+</p>
+{% for c in clases %}
+  <div class="card">
+    <h3>{{ c.fecha }} — {{ c.tema }}</h3>
+    <table class="table">
+      <thead><tr><th>DNI</th><th>Alumno</th><th>Presente</th><th>Hora</th></tr></thead>
+      <tbody>
+      {% for a in c.asistencias.all %}
+        <tr>
+          <td>{{ a.alumno.dni }}</td>
+          <td>{{ a.alumno.apellido1 }}, {{ a.alumno.nombre1 }}</td>
+          <td>{{ a.presente|yesno:"Sí,No" }}</td>
+          <td>{{ a.timestamp }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4"><em>Sin asistencias</em></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% empty %}
+  <p><em>Sin clases.</em></p>
+{% endfor %}
+{% endblock %}

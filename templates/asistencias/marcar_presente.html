@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Marcar Presente{% endblock %}
+{% block content %}
+<h1>Marcar Presente</h1>
+<p><strong>{{ clase.materia.diplomatura.nombre }}</strong> · {{ clase.materia.nombre }} · {{ clase.fecha }}</p>
+<form method="post" class="card">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn" type="submit">Confirmar</button>
+</form>
+{% endblock %}

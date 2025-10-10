@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Dar Presente{% endblock %}
+{% block content %}
+<h1>Clases habilitadas ahora</h1>
+<div class="list">
+  {% for c in clases %}
+    <div class="card row">
+      <div>
+        <div><strong>{{ c.materia.diplomatura.nombre }}</strong> · {{ c.materia.nombre }}</div>
+        <div>{{ c.fecha }} — {{ c.tema }}</div>
+      </div>
+      <div><a class="btn" href="{% url 'asistencias:marcar_presente' c.id %}">Marcar Presente</a></div><!--apunta a una url usando el 'name' y le manda el id de la clase-->
+    </div>
+  {% empty %}
+    <p>No hay clases habilitadas en este momento.</p>
+  {% endfor %}
+</div>
+{% endblock %}

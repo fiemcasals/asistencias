@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Gestión{% endblock %}
+{% block content %}
+<h1>Gestión (Docentes)</h1>
+<div class="actions">
+  <a class="btn" href="{% url 'asistencias:diplomatura_nueva' %}">+ Diplomatura</a>
+  <a class="btn" href="{% url 'asistencias:materia_nueva' %}">+ Materia</a>
+  <a class="btn" href="{% url 'asistencias:clase_nueva' %}">+ Clase</a>
+</div>
+
+<h2>Materias</h2>
+<ul>
+  {% for m in materias %}
+    <li>{{ m.diplomatura.nombre }} · <strong>{{ m.nombre }}</strong> — 
+      <a href="{% url 'asistencias:listado_clases' m.id %}">Clases y asistencias</a></li>
+  {% empty %}
+    <li><em>No hay materias.</em></li>
+  {% endfor %}
+</ul>
+{% endblock %}
