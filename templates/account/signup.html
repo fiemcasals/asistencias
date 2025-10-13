@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Registro" %}{% endblock %}
+{% block content %}
+<h1>Crear cuenta</h1>
+
+<form class="card" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+
+  {# Resumen de errores del form #}
+  {% if form.non_field_errors %}
+    <div class="alert">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+  {% if form.errors %}
+    <div class="alert">
+      Revisá los campos marcados abajo.
+    </div>
+  {% endif %}
+
+  <div class="grid">
+    <p>
+      <label for="{{ form.first_name.id_for_label }}">Nombre</label>
+      {{ form.first_name }}
+      {{ form.first_name.errors }}
+    </p>
+    <p>
+      <label for="{{ form.second_name.id_for_label }}">Segundo nombre</label>
+      {{ form.second_name }}
+      {{ form.second_name.errors }}
+    </p>
+    <p>
+      <label for="{{ form.last_name.id_for_label }}">Apellido</label>
+      {{ form.last_name }}
+      {{ form.last_name.errors }}
+    </p>
+    <p>
+      <label for="{{ form.second_last_name.id_for_label }}">Segundo apellido</label>
+      {{ form.second_last_name }}
+      {{ form.second_last_name.errors }}
+    </p>
+  </div>
+
+  <p>
+    <label for="{{ form.dni.id_for_label }}">DNI</label>
+    {{ form.dni }}
+    {{ form.dni.errors }}
+  </p>
+
+  <div class="grid">
+    <p>
+      <label for="{{ form.email.id_for_label }}">Email</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </p>
+    {% if form.email2 %}
+    <p>
+      <label for="{{ form.email2.id_for_label }}">Confirmar email</label>
+      {{ form.email2 }}
+      {{ form.email2.errors }}
+    </p>
+    {% endif %}
+  </div>
+
+  <div class="grid">
+    <p>
+      <label for="{{ form.password1.id_for_label }}">Contraseña</label>
+      {{ form.password1 }}
+      {{ form.password1.errors }}
+    </p>
+    <p>
+      <label for="{{ form.password2.id_for_label }}">Confirmar contraseña</label>
+      {{ form.password2 }}
+      {{ form.password2.errors }}
+    </p>
+  </div>
+
+  {% if form.token_upgrade %}
+    <p>
+      <label for="{{ form.token_upgrade.id_for_label }}">Token de nivel (opcional)</label>
+      {{ form.token_upgrade }}
+      {{ form.token_upgrade.errors }}
+      <small class="muted">Usalo si tenés un token para ser Docente (nivel 2).</small>
+    </p>
+  {% endif %}
+
+  <button class="btn" type="submit">{% trans "Registrarme" %}</button>
+</form>
+
+<p class="muted">
+  {% trans "Al registrarte, aceptás la verificación por email. Tenés que confirmar el correo para ingresar." %}
+</p>
+<p class="muted">
+  {% trans "¿Ya tenés cuenta?" %} <a href="{% url 'account_login' %}">{% trans "Ingresar" %}</a>
+</p>
+{% endblock %}

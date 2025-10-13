@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import environ
 
 #fijamos la direccion base del archivo a fin de poder referenciar otros archivos
 #la palabra reservada para la direccion base es BASE_DIR
@@ -7,6 +8,11 @@ import os
 #luego usamos .resolve() para obtener la ruta absoluta
 #y .parent.parent para subir dos niveles en la jerarquia de directorios
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+environ.Env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
+
+
 
 #el SECRET_KEY debe ser unico y secreto en produccion
 #en desarrollo podemos usar un valor fijo
@@ -26,13 +32,18 @@ ALLOWED_HOSTS = ['*']
 # Tambien podemos agregar nuestras propias apps personalizadas
 
 INSTALLED_APPS = [
+    'asistencias',
     'django.contrib.admin',#interfaz de administracion
     'django.contrib.auth', #sistema de autenticacion
     'django.contrib.contenttypes',#se usa para establecer relaciones “polimórfica” simple a múltiples modelos. no hace falta especificar a que apunta, como si es necesario en la fk
     'django.contrib.sessions',#gestion de sesiones, ej: mantener a los usuarios autenticados
     'django.contrib.messages',#sistema de mensajeria, ej: mostrar mensajes de exito o error a los usuarios
     'django.contrib.staticfiles',#gestion de archivos estaticos (css, js, imagenes), ej: servir archivos estaticos en desarrollo, sabe donde ir a buscarlos
-    'asistencias', #app propia
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    
 ]
 
 MIDDLEWARE = [ #los middlewares son componentes que procesan las solicitudes y respuestas en la aplicacion, las procesan para agregar funcionalidades como seguridad, gestion de sesiones, etc.
@@ -44,6 +55,9 @@ MIDDLEWARE = [ #los middlewares son componentes que procesan las solicitudes y r
     'django.contrib.messages.middleware.MessageMiddleware',#gestiona los mensajes de un solo uso, como los mensajes de exito o error
     'django.middleware.clickjacking.XFrameOptionsMiddleware',#protege contra ataques de clickjacking
     #los ataques de clickjacking son un tipo de ataque donde un usuario es engañado para hacer clic en algo diferente a lo que el usuario percibe, potencialmente revelando informacion confidencial o permitiendo el control de su computadora mientras interactua con una aplicacion web aparentemente inofensiva
+    "allauth.account.middleware.AccountMiddleware",
+    
+    
 ]
 
 #definimos a donde tiene que ir a buscar los redireccionamientos en el proyecto
@@ -120,7 +134,38 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 #establece como configuracion global, esto se puede cambiar en cada app en app.py, los campos autocompletados, en este caso por un bigautofield que quiere decir un entero grande 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+AUTH_USER_MODEL = 'asistencias.User'
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 #setea donde se direcciona el login, logout y redireccionamientos
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_REDIRECT_URL = 'asistencias:home'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'   # fuerza confirmación por email
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# Nuevo:
+ACCOUNT_LOGIN_METHODS = {"email"}  # o {"email", "username"} si admitís ambos
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]  # podés extender esto luego
+
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None 
+
+ACCOUNT_FORMS = {"signup": "asistencias.forms.SignupForm"}
+
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST', default='')
+EMAIL_PORT = int(env('EMAIL_PORT', default=0) or 0)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='no-reply@example.com')
+
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'

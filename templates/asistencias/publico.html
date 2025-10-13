@@ -7,9 +7,11 @@
     <div class="card row">
       <div>
         <div><strong>{{ c.materia.diplomatura.nombre }}</strong> · {{ c.materia.nombre }}</div>
-        <div>{{ c.fecha }} — {{ c.tema }}</div>
+        <div>{{ c.fecha }} — {{ c.hora_inicio }}–{{ c.hora_fin }}</div>
       </div>
-      <div><a class="btn" href="{% url 'asistencias:marcar_presente' c.id %}">Marcar Presente</a></div><!--apunta a una url usando el 'name' y le manda el id de la clase-->
+      <div>
+        <a class="btn" href="{% url 'asistencias:marcar_presente' c.id %}">Marcar Presente</a>
+      </div>
     </div>
   {% empty %}
     <p>No hay clases habilitadas en este momento.</p>

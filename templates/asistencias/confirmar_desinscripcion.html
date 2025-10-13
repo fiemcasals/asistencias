@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Desinscribirse{% endblock %}
+{% block content %}
+<h1>Desinscribirse de {{ materia.diplomatura.nombre }} · {{ materia.nombre }}</h1>
+
+<p class="muted">
+  ¿Estás seguro de que querés desinscribirte? Podés volver a inscribirte más adelante si tenés el código.
+</p>
+
+<form method="post" class="card">
+  {% csrf_token %}
+  <button class="btn danger" type="submit">Sí, desinscribirme</button>
+  <a class="btn" href="{% url 'asistencias:ver_clases' materia.id %}">Cancelar</a>
+</form>
+{% endblock %}

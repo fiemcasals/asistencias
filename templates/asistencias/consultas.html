@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Consulta de asistencias{% endblock %}
+{% block content %}
+<h1>Consulta de asistencias</h1>
+
+{# Si NO es alumno nivel 1 logueado, mostramos el form de DNI #}
+{% if not request.user.is_authenticated or request.user.nivel != 1 %}
+  <form method="get" class="card">
+    <label for="dni">DNI</label>
+    <input type="text" id="dni" name="dni" value="{{ dni|default:'' }}" />
+    <button class="btn" type="submit">Buscar</button>
+  </form>
+{% endif %}
+
+{% if alumno %}
+  <h2>{{ alumno.last_name }}, {{ alumno.first_name }} ({{ alumno.dni }})</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Diplomatura</th>
+        <th>Materia</th>
+        <th>Presente</th>
+        <th>Hora registro</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in asistencias %}
+        <tr>
+          <td>{{ a.clase.fecha|default:"—" }}</td>
+          <td>{{ a.clase.materia.diplomatura.nombre }}</td>
+          <td>{{ a.clase.materia.nombre }}</td>
+          <td>Sí</td>
+          <td>{{ a.timestamp }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5"><em>Sin registros</em></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}

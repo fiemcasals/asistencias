@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Materias{% endblock %}
+{% block content %}
+<h1>Materias</h1>
+
+<div class="actions">
+  <form method="post" action="{% url 'asistencias:insc_materia_codigo' %}" class="row card" style="gap:8px;">
+    {% csrf_token %}
+    <label for="codigo">Inscribirme por código</label>
+    <input type="text" id="codigo" name="codigo" placeholder="Código de materia" required />
+    <button class="btn" type="submit">Inscribirme</button>
+  </form>
+</div>
+
+<table class="table">
+  <thead>
+    <tr><th>Diplomatura</th><th>Materia</th><th>Acciones</th></tr>
+  </thead>
+  <tbody>
+    {% for m in materias %}
+      <tr>
+        <td>{{ m.diplomatura.nombre }}</td>
+        <td>{{ m.nombre }}</td>
+        <td><a class="btn" href="{% url 'asistencias:ver_clases' m.id %}">Ver clases</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="3"><em>Sin materias.</em></td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

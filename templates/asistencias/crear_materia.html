@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Crear materia{% endblock %}
+{% block content %}
+<h1>Crear materia</h1>
+<form method="post" class="card">
+  {% csrf_token %}
+  <p>
+    <label>Diplomatura</label>
+    {{ form.diplomatura }}
+  </p>
+  <p>
+    <label>Nombre de la materia</label>
+    {{ form.nombre }}
+  </p>
+  <p>
+    <label>Código de materia</label>
+    {{ form.codigo }}
+  </p>
+  <p>
+    <label>Descripción</label>
+    {{ form.descripcion }}
+  </p>
+  <button class="btn" type="submit">Crear</button>
+</form>
+{% endblock %}

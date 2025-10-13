@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Crear diplomatura{% endblock %}
+{% block content %}
+<h1>Crear diplomatura</h1>
+<form method="post" class="card">
+  {% csrf_token %}
+  <p>
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" name="nombre" required />
+  </p>
+  <p>
+    <label for="codigo">Código</label>
+    <input type="text" id="codigo" name="codigo" required />
+  </p>
+  <button class="btn" type="submit">Crear</button>
+</form>
+{% endblock %}

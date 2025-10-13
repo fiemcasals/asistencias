@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Confirmar email" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Confirmación de email" %}</h1>
+
+{% if confirmation %}
+  <p>{% blocktrans with email=confirmation.email_address.email %}Confirmá que <strong>{{ email }}</strong> es tu correo.{% endblocktrans %}</p>
+  <form class="card" method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+    {% csrf_token %}
+    <button class="btn" type="submit">{% trans "Confirmar" %}</button>
+  </form>
+{% else %}
+  <p class="alert">{% trans "Este enlace de confirmación no es válido o ya fue usado." %}</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Cargar alumnos (Excel/CSV){% endblock %}
+{% block content %}
+<h1>Cargar alumnos a {{ diplomatura.nombre }}</h1>
+<form method="post" enctype="multipart/form-data" class="card">
+  {% csrf_token %}
+  <p>
+    <label for="archivo">Archivo (.csv / .xlsx)</label>
+    <input type="file" id="archivo" name="archivo" accept=".csv,.xlsx" required />
+  </p>
+  <button class="btn" type="submit">Procesar</button>
+</form>
+<p class="muted">
+  Formato sugerido: dni,email,nombre,apellido, materia_codigo (opcional).
+</p>
+{% endblock %}

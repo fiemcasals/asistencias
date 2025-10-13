@@ -1,33 +1,41 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>{% block title %}Asistencias Diplomaturas{% endblock %}</title>
-  <link rel="stylesheet" href="/static/core/styles.css">
+  <link rel="stylesheet" href="{% static 'core/styles.css' %}">
 </head>
 <body>
   <header class="topbar">
     <div class="container">
-      <a class="brand" href="/">Asistencias</a>
+      <a class="brand" href="{% url 'asistencias:home' %}">Asistencias</a>
       <nav>
-        <a href="/">Inicio</a>
-        <a href="/publico/">Dar Presente</a><!--apunta a una view, previo pasar por urls.py-->
-        <a href="/publico/consulta/">Consultar</a>
+        <a href="{% url 'asistencias:home' %}">Inicio</a>
+
         {% if request.user.is_authenticated %}
-          <a href="/logout/">Salir</a>
+        <a href="{% url 'asistencias:publico' %}">Dar Presente</a>
+        <a href="{% url 'asistencias:consulta_publica' %}">Consultar</a>
+        <a href="{% url 'asistencias:insc_materia_codigo' %}">Inscribirse a materia</a>
+        <a href="{% url 'account_logout' %}">Salir</a>
         {% else %}
-          <a href="/login/">Ingresar</a>
+          <a href="{% url 'account_login' %}">Ingresar</a>
+          <a href="{% url 'account_signup' %}">Registrarse</a>
         {% endif %}
       </nav>
     </div>
   </header>
+
   <main class="container">
-    {% for message in messages %} 
+    {% for message in messages %}
       <div class="alert">{{ message }}</div>
     {% endfor %}
     {% block content %}{% endblock %}
   </main>
-  <footer class="footer"><div class="container">© 2025</div></footer>
+
+  <footer class="footer">
+    <div class="container">© 2025</div>
+  </footer>
 </body>
 </html>

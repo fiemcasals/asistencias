@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Usar token{% endblock %}
+{% block content %}
+<h1>Usar token</h1>
+<form method="post" class="card">
+  {% csrf_token %}
+  <label for="code">Código</label>
+  <input type="text" id="code" name="code" required />
+  <button class="btn" type="submit">Aplicar</button>
+</form>
+<p class="muted">
+  Por medio del tocken correcto el usuario cambios sus niveles de acceso.
+</p>
+{% endblock %}

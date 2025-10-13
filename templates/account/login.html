@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Ingresar" %}{% endblock %}
+{% block content %}
+<h1>Ingresar</h1>
+<form class="card" method="post" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    <div class="alert">{{ form.non_field_errors }}</div>
+  {% endif %}
+  <p>
+    <label for="id_login">{% trans "Email" %}</label>
+    {{ form.login }}
+  </p>
+  <p>
+    <label for="id_password">{% trans "Contraseña" %}</label>
+    {{ form.password }}
+  </p>
+  <p class="row">
+    <label for="id_remember">{% trans "Recordarme" %}</label>
+    {{ form.remember }}
+  </p>
+  <button class="btn" type="submit">{% trans "Ingresar" %}</button>
+</form>
+
+<p class="muted">
+  <a href="{% url 'account_reset_password' %}">{% trans "¿Olvidaste tu contraseña?" %}</a>
+  ·
+  <a href="{% url 'account_signup' %}">{% trans "Crear una cuenta" %}</a>
+</p>
+{% endblock %}

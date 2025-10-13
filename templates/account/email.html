@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Emails" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Mis emails" %}</h1>
+
+<div class="card">
+  <h3>{% trans "Direcciones asociadas" %}</h3>
+  <form method="post" action="{% url 'account_email' %}">
+    {% csrf_token %}
+    <table class="table">
+      <thead><tr><th>{% trans "Email" %}</th><th>{% trans "Principal" %}</th><th>{% trans "Verificado" %}</th><th></th></tr></thead>
+      <tbody>
+      {% for emailaddress in emailaddresses %}
+        <tr>
+          <td>{{ emailaddress.email }}</td>
+          <td>{% if emailaddress.primary %}✓{% endif %}</td>
+          <td>{% if emailaddress.verified %}✓{% else %}—{% endif %}</td>
+          <td>
+            {% if not emailaddress.verified %}
+              <button class="btn" name="action_send" type="submit" value="{{ emailaddress.id }}">{% trans "Reenviar verificación" %}</button>
+            {% endif %}
+            {% if not emailaddress.primary %}
+              <button class="btn" name="action_primary" type="submit" value="{{ emailaddress.id }}">{% trans "Hacer principal" %}</button>
+              <button class="btn danger" name="action_remove" type="submit" value="{{ emailaddress.id }}">{% trans "Eliminar" %}</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4"><em>{% trans "No hay emails asociados." %}</em></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </form>
+</div>
+
+<div class="card" style="margin-top:1rem;">
+  <h3>{% trans "Agregar email" %}</h3>
+  <form method="post" action="{% url 'account_email' %}">
+    {% csrf_token %}
+    {{ add_email_form.as_p }}
+    <button class="btn" name="action_add" type="submit">{% trans "Agregar" %}</button>
+  </form>
+</div>
+{% endblock %}

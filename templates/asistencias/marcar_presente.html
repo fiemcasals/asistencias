@@ -2,10 +2,11 @@
 {% block title %}Marcar Presente{% endblock %}
 {% block content %}
 <h1>Marcar Presente</h1>
-<p><strong>{{ clase.materia.diplomatura.nombre }}</strong> · {{ clase.materia.nombre }} · {{ clase.fecha }}</p>
+<p><strong>{{ clase.materia.diplomatura.nombre }}</strong> · {{ clase.materia.nombre }} · {{ clase.fecha }} ({{ clase.hora_inicio }}–{{ clase.hora_fin }})</p>
+
 <form method="post" class="card">
   {% csrf_token %}
-  {{ form.as_p }}
+  <p>Confirmá tu asistencia a esta clase.</p>
   <button class="btn" type="submit">Confirmar</button>
 </form>
 {% endblock %}

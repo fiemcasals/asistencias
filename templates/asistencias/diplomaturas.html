@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Diplomaturas{% endblock %}
+{% block content %}
+<h1>Diplomaturas</h1>
+
+<div class="actions">
+  <form method="post" action="{% url 'asistencias:insc_diplomatura_codigo' %}" class="row card" style="gap:8px;">
+    {% csrf_token %}
+    <label for="codigo">Inscribirme por código</label>
+    <input type="text" id="codigo" name="codigo" placeholder="Código de diplomatura" required />
+    <button class="btn" type="submit">Inscribirme</button>
+  </form>
+</div>
+
+<ul>
+  {% for d in diplomaturas %}
+    <li>
+      <strong>{{ d.nombre }}</strong> <small>({{ d.codigo }})</small>
+    </li>
+  {% empty %}
+    <li><em>Sin diplomaturas.</em></li>
+  {% endfor %}
+</ul>
+{% endblock %}

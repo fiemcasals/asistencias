@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Presentes y ausentes{% endblock %}
+{% block content %}
+<h1>{{ materia.diplomatura.nombre }} · {{ materia.nombre }}</h1>
+
+{% if planillas %}
+  {% for clase, filas in planillas %}
+    <div class="card">
+      <h3>{{ clase.fecha }} — {{ clase.hora_inicio }}–{{ clase.hora_fin }}</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>DNI</th>
+            <th>Alumno</th>
+            <th>Estado</th>
+            <th>Hora marcado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in filas %}
+            <tr>
+              <td>{{ f.dni }}</td>
+              <td>{{ f.alumno }}</td>
+              <td>
+                {% if f.presente %}
+                  <span class="badge">Presente</span>
+                {% else %}
+                  <span class="badge">Ausente</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if f.timestamp %}
+                  {{ f.timestamp }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4"><em>Sin inscriptos.</em></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endfor %}
+{% else %}
+  <p><em>Sin clases.</em></p>
+{% endif %}
+{% endblock %}

@@ -1,17 +1,43 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from . import views 
+
 
 app_name = 'asistencias'
 
 urlpatterns = [
     path('', views.home, name='home'),
+
+    # Alumno / nivel 1
+    path('perfil/', views.perfil, name='perfil'),
+    path('diplomaturas/', views.listar_diplomaturas, name='listar_diplomaturas'),
+    path('materias/', views.listar_materias, name='listar_materias'),
+    path('inscribirse/diplomatura/', views.insc_diplomatura_por_codigo, name='insc_diplomatura_codigo'),
+    path('inscribirse/materia/', views.insc_materia_por_codigo, name='insc_materia_codigo'),
+    path('clases/<int:materia_id>/', views.ver_clases_materia, name='ver_clases'),
+    path('clases/<int:clase_id>/presente/', views.marcar_presente, name='marcar_presente'),
+
+    # Tokens
+    path('token/usar/', views.usar_token, name='usar_token'),
+
+    # Docente / nivel 2
+    path('materias/crear/', views.crear_materia, name='crear_materia'),
+    path('materias/<int:materia_id>/crear-clase/', views.crear_clase, name='crear_clase'),
+    path('materias/<int:materia_id>/presentes/', views.listado_presentes, name='listado_presentes'),
+    path('materias/<int:materia_id>/generar-token-adjunto/', views.generar_token_adjunto, name='token_adjunto'),
+
+    # Coordinador / nivel 3
+    path('diplomaturas/crear/', views.crear_diplomatura, name='crear_diplomatura'),
+    path('diplomaturas/<int:diplo_id>/cargar-excel/', views.cargar_excel_inscripciones, name='cargar_excel'),
+
+    # Reportes
+    path('reportes/exportar/', views.exportar_reportes, name='exportar_reportes'),
+
+    # Público
     path('publico/', views.publico, name='publico'),
-    path('publico/marcar/<int:clase_id>/', views.marcar_presente, name='marcar_presente'),
-    path('publico/consulta/', views.consulta_asistencias, name='consulta_asistencias'),
-    path('gestion/', views.gestion, name='gestion'),
-    path('gestion/diplomatura/nueva/', views.diplomatura_nueva, name='diplomatura_nueva'),
-    path('gestion/materia/nueva/', views.materia_nueva, name='materia_nueva'),
-    path('gestion/clase/nueva/', views.clase_nueva, name='clase_nueva'),
-    path('gestion/materia/<int:materia_id>/clases/', views.listado_clases, name='listado_clases'),
-    path('gestion/materia/<int:materia_id>/asistencias/pdf/', views.exportar_asistencias_pdf, name='exportar_asistencias_pdf'),
+    path('publico/consulta/', views.consulta_publica, name='consulta_publica'),
+
+    #desincribirse de una materia
+    path('materias/<int:materia_id>/desinscribirse/', views.desinscribirse_materia, name='desinscribirse_materia'),
+
+
 ]
