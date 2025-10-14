@@ -3,6 +3,11 @@ import os
 import environ
 from dotenv import load_dotenv
 
+
+def _split_list(var, default=""):
+    return [x.strip() for x in os.getenv(var, default).split(",") if x.strip()]
+
+
 load_dotenv()
 #fijamos la direccion base del archivo a fin de poder referenciar otros archivos
 #la palabra reservada para la direccion base es BASE_DIR
@@ -32,27 +37,19 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 
 # --- Proxy detrás de Nginx Proxy Manager ---
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = os.getenv("DJANGO_USE_X_FORWARDED_HOST", "False").lower() == "true"
+_sp = os.getenv("DJANGO_SECURE_PROXY_SSL_HEADER", "").split(",")
+SECURE_PROXY_SSL_HEADER = tuple(_sp) if len(_sp) == 2 else None
 SECURE_SSL_REDIRECT = False  # TLS termina en NPM
 
 # --- Hosts permitidos por entorno ---
 # Ejemplo de .env: DJANGO_ALLOWED_HOSTS=asistencias.misitiowebpersonal.com.ar,web,localhost,127.0.0.1
-ALLOWED_HOSTS = [
-    h.strip() for h in os.getenv(
-        "DJANGO_ALLOWED_HOSTS",
-        "localhost,127.0.0.1,web"
-    ).split(",") if h.strip()
-]
+ALLOWED_HOSTS = _split_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
 
 # --- CSRF por dominio HTTPS (NPM) ---
 # Ejemplo de .env: CSRF_TRUSTED_ORIGINS=https://asistencias.misitiowebpersonal.com.ar
-_csrf_env = os.getenv("CSRF_TRUSTED_ORIGINS", "")
-if _csrf_env:
-    CSRF_TRUSTED_ORIGINS = [u.strip() for u in _csrf_env.split(",") if u.strip()]
-
-#
-
+_csrf = _split_list("DJANGO_CSRF_TRUSTED_ORIGINS", "")
+CSRF_TRUSTED_ORIGINS = _csrf 
 
 
 INSTALLED_APPS = [
