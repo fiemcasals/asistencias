@@ -23,6 +23,10 @@
           <a href="{% url 'account_login' %}">Ingresar</a>
           <a href="{% url 'account_signup' %}">Registrarse</a>
         {% endif %}
+            {# ====== BOTÓN NUEVO: solo nivel 3 o 5 ====== #}
+    {% if request.user.nivel == 3 or request.user.nivel == 5 %}
+      <a href="{% url 'asistencias:exportar_xlsx' %}">Exportar datos</a>
+    {% endif %}
       </nav>
     </div>
   </header>

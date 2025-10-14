@@ -39,5 +39,7 @@ urlpatterns = [
     #desincribirse de una materia
     path('materias/<int:materia_id>/desinscribirse/', views.desinscribirse_materia, name='desinscribirse_materia'),
 
+    #exportar datos
+    path('exportar/xlsx/', views.exportar_xlsx, name='exportar_xlsx'),
 
 ]
