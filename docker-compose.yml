@@ -1,18 +1,20 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: dockerfile            # <= si tu archivo es "dockerfile" en minúsculas
     env_file: .env
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      - media_data:/app/media          # subidas de usuarios (persistentes)
-      - static_data:/app/staticfiles   # collectstatic (persistente)
+      - media_data:/app/media           # subidas de usuarios (persistentes)
+      - static_data:/app/staticfiles    # collectstatic (persistente)
     expose:
-      - "8000"                         # NPM va a apuntar a http://web:8000
+      - "8000"                          # NPM apunta a http://web:8000
     restart: unless-stopped
     networks:
-      - net-proxy                      # misma red que Nginx Proxy Manager
+      - net-proxy                       # misma red que NPM
       - default
     command: >
       bash -lc "
@@ -25,6 +27,12 @@ services:
           --graceful-timeout 30
           --access-logfile - --error-logfile -
       "
+    healthcheck:
+      test: ["CMD-SHELL", "python - <<'PY'\nimport socket,sys; s=socket.socket(); s.settimeout(2); s.connect(('127.0.0.1',8000)); s.close(); sys.exit(0)\nPY"]
+      interval: 15s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
 
   db:
     image: postgres:16
