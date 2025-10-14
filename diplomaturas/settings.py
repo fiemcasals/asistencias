@@ -1,7 +1,9 @@
 from pathlib import Path
 import os
 import environ
+from dotenv import load_dotenv
 
+load_dotenv()
 #fijamos la direccion base del archivo a fin de poder referenciar otros archivos
 #la palabra reservada para la direccion base es BASE_DIR
 #usamos Path(__file__) para obtener la direccion del archivo actual
@@ -17,19 +19,26 @@ environ.Env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 #el SECRET_KEY debe ser unico y secreto en produccion
 #en desarrollo podemos usar un valor fijo
 #usamos esta variable 'SECRET_KEY' para seguridad, permitiendonos firmar cookies y otros datos, a fin de evitar manipulaciones como la falsificacion de solicitudes entre sitios (CSRF)
-SECRET_KEY = 'dev-secret-key-change-me'
 
-# En produccion, DEBUG debe ser False, esto nos permite ver mensajes de error detallados y otras caracteristicas de depuracion
-DEBUG = True
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret")
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 # ALLOWED_HOSTS define una lista de nombres de host/domains que esta aplicacion puede servir
 # En desarrollo, podemos usar ['*'] para permitir todos los hosts
 # En produccion, debemos especificar los nombres de host permitidos
 # Un nombre de host hace referencia a la direccion IP o dominio a traves del cual se accede a la aplicacion
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS","").split(",") if h.strip()]
+CSRF_TRUSTED_ORIGINS = [h.strip() for h in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS","").split(",") if h.strip()]
 
 # Django tiene apps integradas que proporcionan funcionalidades comunes
 # Tambien podemos agregar nuestras propias apps personalizadas
+
+# Proxy/SSL detrás de NPM/Cloudflare
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+SECURE_SSL_REDIRECT = True  # fuerza https
 
 INSTALLED_APPS = [
     'asistencias',
@@ -43,6 +52,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    "whitenoise.runserver_nostatic",
     
 ]
 
@@ -56,7 +66,9 @@ MIDDLEWARE = [ #los middlewares son componentes que procesan las solicitudes y r
     'django.middleware.clickjacking.XFrameOptionsMiddleware',#protege contra ataques de clickjacking
     #los ataques de clickjacking son un tipo de ataque donde un usuario es engañado para hacer clic en algo diferente a lo que el usuario percibe, potencialmente revelando informacion confidencial o permitiendo el control de su computadora mientras interactua con una aplicacion web aparentemente inofensiva
     "allauth.account.middleware.AccountMiddleware",
-    
+    #deploy:
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # antes de CommonMiddleware
     
 ]
 
@@ -94,13 +106,15 @@ TEMPLATES = [
 #un servidor compatible seria un servidor como gunicorn o uWSGI, tecnologias que permiten desplegar aplicaciones web escritas en python
 WSGI_APPLICATION = 'diplomaturas.wsgi.application'
 
-#se establecen los atributos de la base de datos
+# Base de datos
 DATABASES = {
-    'default': {
-        #usamos sqlite3 como motor de base de datos, es simple y no requiere configuracion adicional
-        'ENGINE': 'django.db.backends.sqlite3',
-        #bajo este mismo nombre y en la direccion establecida en BASE_DIR se crea el archivo de base de datos
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST", "db"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -125,8 +139,6 @@ USE_I18N = True
 #use_tz habilita el soporte de zonas horarias, permitiendo que django maneje fechas y horas de manera consciente de las zonas horarias
 USE_TZ = True
 
-#static_url sirve para definir la url base para servir archivos estaticos
-STATIC_URL = '/static/'
 
 #staticfiles_dirs define donde va a ir a buscar a los archivos estaticos, como ser css, imagenes, js, etc
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -169,3 +181,11 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='no-reply@example.com')
 
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+
+# Static & Media
+STATIC_URL = os.getenv("STATIC_URL", "/static/")
+STATIC_ROOT = BASE_DIR / "staticfiles"  # donde collectstatic deja todo
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
+MEDIA_ROOT = BASE_DIR / "media"
