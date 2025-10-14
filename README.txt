@@ -103,3 +103,6 @@ DiplomaturasAsistencias/
 - Códigos QR por clase para facilitar marcado con celular.
 - Vistas de estadísticas (porcentaje de asistencia por alumno/materia).
 - Exportación a CSV además de PDF.
+
+
+#agrege un auto deploy
