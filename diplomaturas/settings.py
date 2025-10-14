@@ -28,17 +28,32 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 # En produccion, debemos especificar los nombres de host permitidos
 # Un nombre de host hace referencia a la direccion IP o dominio a traves del cual se accede a la aplicacion
 # ALLOWED_HOSTS = ['*']
+#
 
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS","").split(",") if h.strip()]
-CSRF_TRUSTED_ORIGINS = [h.strip() for h in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS","").split(",") if h.strip()]
 
-# Django tiene apps integradas que proporcionan funcionalidades comunes
-# Tambien podemos agregar nuestras propias apps personalizadas
-
-# Proxy/SSL detrás de NPM/Cloudflare
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# --- Proxy detrás de Nginx Proxy Manager ---
 USE_X_FORWARDED_HOST = True
-SECURE_SSL_REDIRECT = True  # fuerza https
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = False  # TLS termina en NPM
+
+# --- Hosts permitidos por entorno ---
+# Ejemplo de .env: DJANGO_ALLOWED_HOSTS=asistencias.misitiowebpersonal.com.ar,web,localhost,127.0.0.1
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv(
+        "DJANGO_ALLOWED_HOSTS",
+        "localhost,127.0.0.1,web"
+    ).split(",") if h.strip()
+]
+
+# --- CSRF por dominio HTTPS (NPM) ---
+# Ejemplo de .env: CSRF_TRUSTED_ORIGINS=https://asistencias.misitiowebpersonal.com.ar
+_csrf_env = os.getenv("CSRF_TRUSTED_ORIGINS", "")
+if _csrf_env:
+    CSRF_TRUSTED_ORIGINS = [u.strip() for u in _csrf_env.split(",") if u.strip()]
+
+#
+
+
 
 INSTALLED_APPS = [
     'asistencias',
