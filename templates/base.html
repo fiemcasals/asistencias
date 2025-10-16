@@ -26,6 +26,7 @@
             {# ====== BOTÓN NUEVO: solo nivel 3 o 5 ====== #}
     {% if request.user.nivel == 3 or request.user.nivel == 5 %}
       <a href="{% url 'asistencias:exportar_xlsx' %}">Exportar datos</a>
+      <a href="{% url 'asistencias:exportar_xlsx' %}">Diplomaturas</a>
     {% endif %}
       </nav>
     </div>

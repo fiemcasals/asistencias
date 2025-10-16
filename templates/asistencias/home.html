@@ -4,43 +4,96 @@
 <h1>Inicio</h1>
 
 {% if request.user.is_authenticated %}
-<h2>Diplomaturas</h2>
-<div class="grid">
-  {% for d in diplomaturas %}
-    <div class="card">
-      <h3>{{ d.nombre }}</h3>
-      <p><small>Código: {{ d.codigo }}</small></p>
-      <ul>
-        {% for m in d.materias.all %}
-          <li>
-            {{ m.nombre }}
-            {% if request.user.is_authenticated %}
-              — <a href="{% url 'asistencias:ver_clases' m.id %}">ver clases</a>
-            {% endif %}
-          </li>
-        {% empty %}
-          <li><em>Sin materias</em></li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% empty %}
-    <p>No hay diplomaturas cargadas.</p>
-  {% endfor %}
-</div>
+  <h2>Diplomaturas</h2>
+  <div class="grid">
+    {% for d in diplomaturas %}
+      <div class="card">
+        <h3>{{ d.nombre }}</h3>
+        <p><small>Código: {{ d.codigo }}</small></p>
+        <ul>
+          {% for m in d.materias.all %}
+            <li>
+              {{ m.nombre }}
+              {% if request.user.is_authenticated %}
+                — <a href="{% url 'asistencias:ver_clases' m.id %}">ver clases</a>
+              {% endif %}
+            </li>
+          {% empty %}
+            <li><em>Sin materias</em></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% empty %}
+      <p>No hay diplomaturas cargadas.</p>
+    {% endfor %}
+  </div>
+
   <div class="actions">
     <a class="btn" href="{% url 'asistencias:perfil' %}">Mi perfil</a>
     <a class="btn" href="{% url 'asistencias:usar_token' %}">Usar token</a>
     {% if request.user.nivel|default:1 >= 2 %}
       <a class="btn" href="{% url 'asistencias:crear_materia' %}">+ Materia</a>
     {% endif %}
-       {# Solo nivel 3+ #}
     {% if request.user.nivel|default:1 >= 3 %}
       <a class="btn" href="{% url 'asistencias:crear_diplomatura' %}">+ Diplomatura</a>
     {% endif %}
   </div>
+
+  {# ============================== #
+     Sección de videos tutoriales
+     ============================== #}
+  <hr style="margin:2rem 0">
+
+  <section>
+    <h2>Tutoriales</h2>
+    <div class="grid" style="display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+
+      {# Video para alumnos (nivel 1 o superior) #}
+      
+      <div class="card" style="padding:1rem;background:#0f0f1a;border-radius:10px">
+        <h3>Video para alumnos</h3>
+        <video controls preload="metadata" style="width:100%;border-radius:10px">
+          <source src="/videos/video_alumno.mp4" type="video/mp4">
+          Tu navegador no soporta video HTML5.
+        </video>
+      </div>
+     
+
+      {# Video para docentes (nivel 2 o superior) #}
+      {% if request.user.nivel|default:1 >= 2 %}
+      <div class="card" style="padding:1rem;background:#0f0f1a;border-radius:10px">
+        <h3>Video para docentes</h3>
+        <video controls preload="metadata" style="width:100%;border-radius:10px">
+          <source src="/videos/video_docente.mp4" type="video/mp4">
+          Tu navegador no soporta video HTML5.
+        </video>
+      </div>
+      {% endif %}
+
+      {# Video para coordinadores (nivel 3 o superior) #}
+      {% if request.user.nivel|default:1 >= 3 %}
+      <div class="card" style="padding:1rem;background:#0f0f1a;border-radius:10px">
+        <h3>Video para coordinadores</h3>
+        <video controls preload="metadata" style="width:100%;border-radius:10px">
+          <source src="/videos/video_coordinador.mp4" type="video/mp4">
+          Tu navegador no soporta video HTML5.
+        </video>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
 {% else %}
   <p>Ingresá o registrate para inscribirte a diplomaturas y materias.</p>
+
+  <hr style="margin:2rem 0">
+
+  <section>
+    <h2>Tutorial para nuevos usuarios</h2>
+    <video controls preload="metadata" style="width:100%;border-radius:10px;max-width:700px">
+      <source src="/videos/video_alumno.mp4" type="video/mp4">
+      Tu navegador no soporta video HTML5.
+    </video>
+  </section>
 {% endif %}
-
-
 {% endblock %}
