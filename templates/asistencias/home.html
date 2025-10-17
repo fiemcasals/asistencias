@@ -52,19 +52,18 @@
       
       <div class="card" style="padding:1rem;background:#0f0f1a;border-radius:10px">
         <h3>Video para alumnos</h3>
-        <video controls preload="metadata" style="width:100%;border-radius:10px">
-          <source src="/videos/video_alumno.mp4" type="video/mp4">
+        <video controls preload="metadata" style="width:25%;border-radius:10px">
+          <source src="/media/tutoriales/video_alumno.mp4" type="video/mp4">
           Tu navegador no soporta video HTML5.
         </video>
       </div>
-     
 
       {# Video para docentes (nivel 2 o superior) #}
       {% if request.user.nivel|default:1 >= 2 %}
       <div class="card" style="padding:1rem;background:#0f0f1a;border-radius:10px">
         <h3>Video para docentes</h3>
-        <video controls preload="metadata" style="width:100%;border-radius:10px">
-          <source src="/videos/video_docente.mp4" type="video/mp4">
+        <video controls preload="metadata" style="width:25%;border-radius:10px">
+          <source src="/media/tutoriales/video_alumno.mp4" type="video/mp4">
           Tu navegador no soporta video HTML5.
         </video>
       </div>
@@ -74,8 +73,8 @@
       {% if request.user.nivel|default:1 >= 3 %}
       <div class="card" style="padding:1rem;background:#0f0f1a;border-radius:10px">
         <h3>Video para coordinadores</h3>
-        <video controls preload="metadata" style="width:100%;border-radius:10px">
-          <source src="/videos/video_coordinador.mp4" type="video/mp4">
+        <video controls preload="metadata" style="width:25%;border-radius:10px">
+          <source src="/media/tutoriales/video_alumno.mp4" type="video/mp4">
           Tu navegador no soporta video HTML5.
         </video>
       </div>
@@ -90,8 +89,8 @@
 
   <section>
     <h2>Tutorial para nuevos usuarios</h2>
-    <video controls preload="metadata" style="width:100%;border-radius:10px;max-width:700px">
-      <source src="/videos/video_alumno.mp4" type="video/mp4">
+    <video controls preload="metadata" style="width:25%;border-radius:10px;max-width:700px">
+      <source src="/media/tutoriales/video_alumno.mp4?v=1" type="video/mp4">
       Tu navegador no soporta video HTML5.
     </video>
   </section>

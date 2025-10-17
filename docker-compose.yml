@@ -2,7 +2,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: dockerfile            # <= si tu archivo es "dockerfile" en minúsculas
+      dockerfile: Dockerfile
     env_file: .env
     depends_on:
       db:
@@ -10,6 +10,7 @@ services:
     volumes:
       - media_data:/app/media           # subidas de usuarios (persistentes)
       - static_data:/app/staticfiles    # collectstatic (persistente)
+      - ./templates:/app/templates:ro
     expose:
       - "8000"                          # NPM apunta a http://web:8000
     restart: unless-stopped
