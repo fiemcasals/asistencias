@@ -7,13 +7,31 @@
   --accent2:#60a5fa;
 }
 
+/* ===== Reset & base ===== */
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(120deg,var(--bg),#0b1220);color:var(--text)}
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  background:linear-gradient(120deg,var(--bg),#0b1220);
+  color:var(--text);
+}
 a{color:var(--accent2);text-decoration:none}
 .container{max-width:1000px;margin:0 auto;padding:16px}
-.topbar{background:rgba(0,0,0,.4);border-bottom:1px solid #1f2937;backdrop-filter:blur(8px);position:sticky;top:0}
-.brand{font-weight:700;margin:16px;color:var(--accent)} 
-nav a{margin-right:12px}
+.topbar{
+  background:rgba(0,0,0,.4);
+  border-bottom:1px solid #1f2937;
+  backdrop-filter:blur(8px);
+  position:sticky; top:0;
+}
+
+/* <<<<<< CLAVE para que marca y menú queden en la misma fila >>>>>> */
+.topbar .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.brand{font-weight:700;margin:16px;color:var(--accent)}
 h1,h2,h3{color:#fff}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid #1f2937;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
@@ -27,10 +45,33 @@ h1,h2,h3{color:#fff}
 input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #1f2937;background:#0b1220;color:var(--text)}
 label{display:block;margin:6px 0 4px;color:#fff}
 .actions{display:flex;gap:8px;margin:12px 0}
-video {
-  max-width: 300px;
-  width: 80%;
-  height: auto;
-  display: block;
-  margin: auto;
+video{max-width:300px;width:80%;height:auto;display:block;margin:auto}
+
+/* ===== Navbar ===== */
+.navbar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;               /* ocupa el espacio disponible */
+  flex-wrap:wrap;       /* permite que los links bajen de línea si no entran */
 }
+.nav-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+/* Empuja el bloque de la derecha (Salir) al extremo derecho */
+.nav-right{ margin-left:auto; }
+
+/* Botón Salir */
+.nav-right .btn-logout{
+  background:#ef4444;
+  color:#fff;
+  padding:8px 14px;
+  border-radius:10px;
+  font-weight:bold;
+  text-decoration:none;
+  transition:background .3s;
+}
+.nav-right .btn-logout:hover{ background:#dc2626; }

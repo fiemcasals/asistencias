@@ -15,6 +15,7 @@ from asistencias.permissions import requiere_nivel
 # asistencias/views/home.py  (o donde tengas la view)
 
 from django.db.models import Q
+from django.db.models import Q
 
 # asistencias/views/home.py (o donde tengas la view)
 from django.db import models
@@ -75,9 +76,27 @@ def listar_diplomaturas(request):
     return render(request, 'asistencias/diplomaturas.html', {'diplomaturas': dips})
 
 
+from django.db.models import Q
+
 @requiere_nivel(1)
 def listar_materias(request):
-    mats = Materia.objects.select_related('diplomatura').all()
+    u = request.user
+    base = (Materia.objects
+            .select_related('diplomatura')
+            .prefetch_related('inscripciones', 'profesores')
+            .order_by('diplomatura__nombre', 'nombre'))
+
+    # Admin/gestor (nivel ≥4) o superuser ven todo
+    if getattr(u, 'is_superuser', False) or getattr(u, 'is_nivel', lambda *_: False)(4):
+        mats = base
+    else:
+        # Alumno inscripto, docente asignado o coordinador de la diplomatura
+        mats = base.filter(
+            Q(inscripciones__user=u) |
+            Q(profesores__user=u) |
+            Q(diplomatura__coordinadores=u)
+        ).distinct()
+
     return render(request, 'asistencias/materias.html', {'materias': mats})
 
 
